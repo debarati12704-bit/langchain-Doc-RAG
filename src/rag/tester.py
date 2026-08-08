@@ -1,17 +1,28 @@
 from rag.loaders.web_loader import load_web_pages
 from rag.processing.chunking import split_documents
-from rag.embeddings.embedder import embed_documents
+from rag.vector_store.chroma_store import create_vector_store
 
-DOC_URLS = [ "https://docs.langchain.com/oss/python/langchain/overview", "https://docs.langchain.com/oss/python/langchain/agents", ]
+DOC_URLS = [ 
+    "https://docs.langchain.com/oss/python/langchain/overview", 
+    "https://docs.langchain.com/oss/python/langchain/agents", 
+    ]
 
 documents=load_web_pages(DOC_URLS)
 print(f"no. of documents :{len(documents)}\n\n")
 
 chunks=split_documents(documents)
-print(f"no. of chunks:{len(chunks)}")
-print(f"content of first chunk:\n{chunks[0].page_content}...\n\n")
+print(f"no. of chunks:{len(chunks)}\n\n")
 
-embeddings=embed_documents(chunks)
-print(f"no. of embeddings:{len(embeddings)}")
-print(f"embedding dimensions:{len(embeddings[0])}")
-print(f"first 10 values:{embeddings[0][:10]}")
+vector_store=create_vector_store(chunks)
+print("Vector Store created successfully\n\n\n")
+
+query="What are LangChain Agents?"
+results=vector_store.similarity_search(query,k=3)
+
+print(f"\n\nQuery: {query}")
+print(f"no. of results: {len(results)}\n\n")
+
+for i,document in  enumerate(results,start=1):
+    print(f"\n-----RESULT {i}-----")
+    print(f"source:{document.metadata.get("source")}")
+    print(document.page_content[:500],"...\n\n\n")
