@@ -1,6 +1,7 @@
 from rag.loaders.web_loader import load_web_pages
 from rag.processing.chunking import split_documents
 from rag.vector_store.chroma_store import create_vector_store
+from rag.generation.generator import generate_answer
 
 DOC_URLS = [ 
     "https://docs.langchain.com/oss/python/langchain/overview", 
@@ -25,4 +26,10 @@ print(f"no. of results: {len(results)}\n\n")
 for i,document in  enumerate(results,start=1):
     print(f"\n-----RESULT {i}-----")
     print(f"source:{document.metadata.get("source")}")
-    print(document.page_content[:500],"...\n\n\n")
+    print(document.page_content,"...\n\n\n")
+
+
+answer=generate_answer(query=query,documents=results)
+
+print("-----GENERATED ANSWER-----")
+print(answer)
