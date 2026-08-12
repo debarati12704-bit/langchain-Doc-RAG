@@ -2,7 +2,7 @@ from langchain_chroma import Chroma
 from langchain_core.documents import Document
 from rag.embeddings.embedder import get_embedding_model
 
-MODEL="sentence-tansformers/all-MiniLM-L6-v2"
+
 PERSIST_DIRECTORY="chroma_db"
 
 def create_vector_store(documents:list[Document])->Chroma:
